@@ -11,6 +11,12 @@ function inews_custom_rss() {
 add_feed( 'bento', 'inews_custom_rss' );
 add_feed( 'centerpiece', 'inews_custom_rss' );
 
+if ( ! defined( 'INN_MEMBER' ) ) {
+	define( 'INN_MEMBER', true );
+}
+if ( ! defined( 'INN_HOSTED' ) ) {
+	define( 'INN_HOSTED', true );
+}
 
 // Analytics
 function inews_eloqua() { ?>
