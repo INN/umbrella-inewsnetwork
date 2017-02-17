@@ -2,9 +2,10 @@
 /**
  * Template Name: Losing Ground
  * Description: The template page for the Losing Ground series page
+ *
+ * This differs from the Largo template in that it adds this line to the series main query:
+ *     'tag__not_in' => array( 629 )
  */
-
-
 get_header();
 
 // Load up our meta data and whatnot
@@ -58,7 +59,7 @@ $content_span = array( 'one-column' => 12, 'two-column' => 8, 'three-column' => 
 		if ( 'standard' == $opt['header_style'] ) {
 			//need to set a size, make this responsive, etc
 			?>
-			<div class="full series-banner"><?php the_post_thumbnail( 'full' ); ?></div>
+			<div class="full series-banner full-image"><?php the_post_thumbnail( 'full' ); ?></div>
 		<?php
 		} else {
 			the_content();
@@ -71,21 +72,31 @@ $content_span = array( 'one-column' => 12, 'two-column' => 8, 'three-column' => 
 
 
 <?php // display left rail
-if ( 'three-column' == $opt['cftl_layout'] ) get_sidebar( 'series-left' );
+if ( 'three-column' == $opt['cftl_layout'] ) :
+		$left_rail = $opt['left_region'];
+?>
+	<aside id="sidebar-left" class="span3">
+		<div class="widget-area" role="complementary">
+			<?php
+				dynamic_sidebar($left_rail);
+			?>
+		</div>
+	</aside>
+<?php
+endif;
 ?>
 
 <div id="content" class="span<?php echo $content_span[ $opt['cftl_layout'] ]; ?> stories" role="main">
 <?php
 
-global $wp_query;
+global $wp_query, $post;
 
 // Make sure we're actually a series page, and pull posts accordingly
 if ( isset( $wp_query->query_vars['term'] )
-			&& isset( $wp_query->query_vars['taxonomy'] )
-			&& 'series' == $wp_query->query_vars['taxonomy'] ) {
+		&& isset( $wp_query->query_vars['taxonomy'] )
+		&& 'series' == $wp_query->query_vars['taxonomy'] ) {
 
 	$series = $wp_query->query_vars['term'];
-	$old_query = $wp_query;
 
 	//default query args: by date, descending
 	$args = array(
@@ -107,41 +118,72 @@ if ( isset( $wp_query->query_vars['term'] )
 	}
 
 	//change args as needed
-	if ('ASC' == $opt['post_order'] ) $args['order'] = 'ASC';
+	//these unusual WP_Query args are handled by filters defined in cftl-series-order.php
+	switch ( $opt['post_order'] ) {
+		case 'ASC':
+			$args['orderby'] = 'ASC';
+			break;
+		case 'custom':
+			$args['orderby'] = 'series_custom';
+			break;
+		case 'featured, DESC':
+		case 'featured, ASC':
+			$args['orderby'] = $opt['post_order'];
+			break;
+	}
 
-	//other changes handled by filters from cftl-series-order.php
-
-	//build the query, using the original as a guide for pagination and whatnot
-	$all_args = array_merge( $old_query->query_vars, $args );
-
-	$wp_query = new WP_Query($all_args);
-
-
-	// and finally wind the posts back so we can go through the loop as usual
-	while ( have_posts() ) : the_post();
-		get_template_part( 'content', 'series' );
+	$series_query = new WP_Query($args);
+	$counter = 1;
+	while ( $series_query->have_posts() ) : $series_query->the_post();
+		get_template_part( 'partials/content', 'series' );
+		do_action( 'largo_loop_after_post_x', $counter, $context = 'archive' );
+		$counter++;
 	endwhile;
-
-	largo_content_nav( 'nav-below' );
-
-	$wp_query = $old_query;
 	wp_reset_postdata();
-	unset( $opt );
+
+	// Enqueue the LMP data
+	$posts_term = of_get_option('posts_term_plural');
+	largo_render_template('partials/load-more-posts', array(
+		'nav_id' => 'nav-below',
+		'the_query' => $series_query,
+		'posts_term' => ($posts_term)? $posts_term : 'Posts'
+	));
 } ?>
 
 </div><!-- /.grid_8 #content -->
 
 <?php // display left rail
-if ($opt['cftl_layout'] != 'one-column') : ?>
-	<?php get_sidebar('series-right'); ?>
-<?php endif; ?>
+if ($opt['cftl_layout'] != 'one-column') :
+	if (!empty($opt['right_region']) && $opt['right_region'] !== 'none') {
+		$right_rail = $opt['right_region'];
+	} else {
+		$right_rail = 'single';
+	}
+?>
+<aside id="sidebar" class="span4">
+	<?php do_action('largo_before_sidebar_content'); ?>
+	<div class="widget-area" role="complementary">
+		<?php
+			do_action('largo_before_sidebar_widgets');
+			dynamic_sidebar($right_rail);
+			do_action('largo_after_sidebar_widgets');
+		?>
+	</div><!-- .widget-area -->
+	<?php do_action('largo_after_sidebar_content'); ?>
+</aside>
 
+<?php
+endif;
 
-<?php //display series footer
+//display series footer
 if ( 'none' != $opt['footer_style'] ) : ?>
 	<section id="series-footer">
 		<?php
-			//custom footer html
+			/*
+			 * custom footer html
+			 * If we don't reset the post meta here, then the footer HTML is from the wrong post. This doesn't mess with LMP, because it happens after LMP is enqueued in the main column.
+			 */
+			wp_reset_postdata();
 			if ( 'custom' == $opt['footer_style']) {
 				echo apply_filters( 'the_content', $opt['footerhtml'] );
 			} else if ( 'widget' == $opt['footer_style'] && is_active_sidebar( $post->post_name . "_footer" ) ) { ?>
@@ -154,4 +196,4 @@ if ( 'none' != $opt['footer_style'] ) : ?>
 <?php endif; ?>
 
 <!-- /.grid_4 -->
-<?php get_footer(); ?>
+<?php get_footer();
