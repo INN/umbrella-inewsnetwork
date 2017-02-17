@@ -5,6 +5,10 @@
  *
  * This differs from the Largo template in that it adds this line to the series main query:
  *     'tag__not_in' => array( 629 )
+ *
+ * No filter was created on largo_lmp_args because this series was last added to in 2014, and there aren't enough posts to justify a LMP button. - Ben Keith
+ * @since 2017-02-17
+ * @since Largo 0.5.5.3
  */
 get_header();
 
