@@ -38,3 +38,13 @@ function inews_eloqua() { ?>
 	</script>
 <?php }
 add_action( 'wp_footer', 'inews_eloqua' );
+
+/**
+ * Include compiled style.css
+ */
+function inews_stylesheet() {
+	wp_dequeue_style( 'largo-child-styles' );
+	$suffix = (LARGO_DEBUG)? '' : '.min';
+	wp_enqueue_style( 'rr', get_stylesheet_directory_uri() . '/css/style' . $suffix . '.css' );
+}
+add_action( 'wp_enqueue_scripts', 'inews_stylesheet', 20 );
