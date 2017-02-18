@@ -1,16 +1,39 @@
-/*
-Theme Name:     I-News Network
-Theme URI:      https://largoproject.org
-Description:    A child theme for the I-News Network based on the Project Largo parent theme.
-Author:         The INN Nerds
-Author URI:     https://nerds.inn.org/
-Template:       largo
-Version:        0.2.0
-*/
+// --------------------------------------------
+// The basics, imported from Largo via Gruntfile.js
+// --------------------------------------------
+@import "variables.less";
+@import "mixins.less";
+
+
+// custom vars
+@import "_vars.less";
+
+// More Largo
+@import "buttons.less";
+@import "widgets.less";
+@import "navbar-common.less";
+@import "typography.less";
+
+@import "_widgets.less";
+@import "_single.less";
 
 #page {
   background: transparent;
 }
+.navbar .navbar-inner {
+  background-color: #fff;
+}
+#site-header {
+  margin: 0;
+  padding: 24px 0;
+  background-color: #fff;
+}
+.archive .primary-featured-post,
+.archive .secondary-featured-post {
+  background-color: #fff;
+  padding: 24px;
+}
+
 #content article,
 .author-box,
 #series-header,
@@ -26,175 +49,11 @@ h3.recent-posts {
   background-color: #fff;
   border-top: 0;
 }
-.pager {
-  margin-top: 24px;
-}
-.pager a {
-  background-color: #fff;
-}
-#site-footer a {
-  color: #fff;
-}
-#site-footer a:hover {
-  color: #eee;
-}
-.navbar-inner,
-.widget,
-.widgettitle,
-.pager a,
-#homepage-featured {
-  border-radius: 0;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-}
-.navbar ul {
-  font-size: 13px;
-}
-.navbar li > a {
-  padding: 11px 10px;
-}
-.dropdown-menu li > a {
-  padding: 3px 15px;
-}
-.widget,
-#homepage-featured {
-  background-color: #fff;
-  border: 0;
-}
-#site-header img {
-  margin: 10px 0;
-}
-article img.attachment-post-thumbnail {
-  float: left;
-  margin: 0 20px 10px 0;
-}
-.carousel-caption {
-  background-color: #fff;
-  border: 0;
-}
-.post-social .right {
-  padding-top: 7px;
-}
-.post-social .left {
-  padding-bottom: 4px;
-}
-.entry-content ul,
-.entry-content li,
-#series-header li {
-  line-height: 1.5;
-}
-.module.aside.half {
-  width: 50%;
-}
-.module.aside h5 {
-  margin-bottom: 13.5px;
-}
-.module.aside p {
-  font-size: 11.5px;
-  margin-bottom: 13.5px;
-}
-.stations-title {
-  padding: 5px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: normal;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-}
-.widget .textwidget p {
-  margin-bottom: 8px;
-}
-.widget .station {
-  background-color: #fff;
-  padding: 10px 20px 20px;
-  margin-bottom: 8px;
-}
-.widget .station h5.toptag {
-  font-size: 12px;
-  font-weight: 300;
-  color: #666;
-  margin-bottom: 3px;
-  font-style: italic;
-}
-.widget .station h4 {
-  font-weight: normal;
-  margin-bottom: 5px;
-  font-size: 21px;
-}
-.widget .station p {
-  margin-bottom: 5px;
-}
-.widget .station .listen {
-  overflow: auto;
-}
-.widget .station .listen span,
-.widget .station .listen img {
-  display: block;
-  float: left;
-  clear: none;
-}
-.widget .station .listen span {
-  font-size: 21px;
-  padding-top: 7px;
-  padding-right: 5px;
-}
-.widget .station .listen img {
-  padding-right: 5px;
-}
-@media (max-width: 1100px) {
-  .nav.hidden-phone {display: none !important;}
-  .nav .visible-phone {display: inherit !important;}
-}
-@media (max-width: 1100px) {
-  .navbar .btn-navbar {
-  	display: visible;
+#site-footer {
+  a {
+    color: #fff;
   }
-  .navbar .container {
-    width: auto;
-    padding: 0;
-  }
-  .nav-collapse {
-    clear: both;
-  }
-  .nav-collapse .nav {
-    float: none;
-    margin: 0 0 0 8px;
-    padding-bottom: 8px;
-  }
-  .nav-collapse .nav > li,
-  .nav-collapse .nav > span > li {
-    float: none;
-    display: list-item;
-    line-height: 2;
-    list-style: none;
-  }
-  .nav-collapse .nav > .divider-vertical {
-    display: none;
-  }
-  .nav-collapse .btn {
-    padding: 4px 10px 4px;
-    font-weight: normal;
-    border-radius: 4px;
-  }
-  .navbar .btn-navbar {
-    display: block;
-  }
-  .nav-collapse {
-	display: none;
-  }
-  .nav-collapse.collapse.in {
-	display: block;
-  }
-}
-@media (max-width: 1100px) {
-  .nav-collapse.collapse {
-    height: auto !important;
-    overflow: visible !important;
-  }
-}
-@media (max-width: 768px) {
-  .btn-navbar .label {
-    display: none;
-    width: 0;
+  a:hover {
+    color: #eee;
   }
 }
